@@ -13,6 +13,16 @@ Examples
 
         $ git clone git@bitbucket.org:CSE-20189-SP16/assignments.git
 
+- **Commit** changes to *head*:
+
+        $ git commit -m "Commit message"
+
+- **Push** changes to the master branch of your remote repository:
+
+        $ git push origin master
+
+
+
 Resources
 ---------
 
