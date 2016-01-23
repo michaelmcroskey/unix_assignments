@@ -190,7 +190,7 @@ Exercise 05: AFS Permissions *(2 Points)*
 
 3. How would you use the fs setacl command to give the instructor (but no one else but yourself) access to a folder in your home directory?
 
-	
+	$ fs setacl -dir instructorFile -acl pbui r
 
 
 Exercise 06: Masks *(1 Point)*
@@ -201,7 +201,10 @@ Exercise 06: Masks *(1 Point)*
 3. Type umask 044 and then use touch to create a file called world3.txt.
 What are the permissions of each of the three files you created? Are they the same? Why or why not? Explain the effect umask has on file creation and how this can be useful.
 
-
+	- world1.txt Owner, Group, and others can read and write
+	- world2.txt Owner, Group, and others can read, Owner can write
+	- world3.txt Group and others can read
+	- These have different permissions because umask has predefined permissions depending on the number. Umask can set default file permissions quickly using custom numbers
 
 
 
