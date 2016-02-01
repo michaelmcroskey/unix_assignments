@@ -1,7 +1,7 @@
 all:	hello-dynamic.o hello-static.o hello-debug.o hello-profile.o
 
 hello-dynamic.o: hello.c
-	gcc -o hello-dynamic hello.c
+	gcc -o hello-dynamic hello.c -rdynamic
 
 hello-static.o: hello.c
 	gcc -o hello-static hello.c -static

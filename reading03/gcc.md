@@ -11,20 +11,19 @@ Examples
 
 - **Compile** a file named "file.c":
 
-        $ gcc file.c
+		Into a.exe
+		$ gcc file.c
+		
+		Into hello.exe
+		$ gcc -o hello.exe file.c
 
 - **Compile** and assemble source files but don't link:
 
-        $ gcc file.c 
-        $ ps axjf
+        $ gcc -o file.c -c
 
-- **Select** all processes:
-
-        $ ps -A
-
-- **Restrict** selection to running processes:
-
-        $ ps -r
+- **Compile** C++ code with dependents:
+		
+		$ g++ -o hello.exe file1.cpp file2.cpp
 
 
 Resources
