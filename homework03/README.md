@@ -57,8 +57,79 @@ Activity 02: Fix It (7 Points)
 	
 	As the homework mentioned, 
 
-3) Line 41
-buffer improperly declared
+3) For each of the three classes of bugs, describe how you diagnosed the problem, what the problem was, and how you fixed it. Be sure to explain the commands you used to track down the bugs and why your modifications address the issues you found.
+	
+	- First I used valgrind to find out that there was a memory leak in the program by making the file and then running: $ valgrind --leak-check=yes ./is_palindrome
+	This showed a specific line where there was an issue, line 41 for me. Buffer was improperly declared.
+	
+	- Next I made sure to properly allocate and more importantly free memory using malloc and free after using the commands:
+	$ gdb ./is_palindrome
+	I realized I needed to subtract 1 from strlen(s) in line 28, needed to malloc in line 39
+	
+	- I had to free sanitized in line 23 because it wasn't being freed from the heap. 
+	
+4) I think it was the hardest to realize that strlen(s) was causing the memory to look out of bounds and trying to figure out where to add/subtract 1. I think extreme care needs to go in defining boundaries of arrays, especially when using pointers and strings in the future.
+
+
 
 Activity 03: Trace It (3 Points)
 --------------------------------
+
+1) Initial contact with the courier:
+	$ /afs/nd.edu/user15/pbui/pub/bin/COURIER
+	
+	He said
+	 ________________________________________ 
+	/ Hmm... you sure you put the package in \
+	\ the right place?                       /
+	 ---------------------------------------- 
+	
+2) Finding the package location
+	$ strings /afs/nd.edu/user15/pbui/pub/bin/COURIER
+	
+	Returned:
+	Uh... who are you?
+	/tmp/%s.deaddrop
+	Hmm... you sure you put the package in the right place?
+	Whoa whoa... you can't give everyone access to the package! Lock it down!
+	Uh... what happened to the package?  I just saw it a moment ago, but now I can' open it...
+	What are you trying to pull here?  The package is the wrong size!
+	Well, everything looks good... I'm not sure what '%s' means, but I'll pass it on.
+	
+3) So I cd'd to /tmp and figured I needed to make ____.deadrop, but didn't know what so I did my username
+
+	$ touch mmcrosk1.deaddrop
+	
+4) Then I returned to the courier using that path to get:
+
+	 ______________________________________ 
+	/ Whoa whoa... you can't give everyone \
+	\ access to the package! Lock it down! /
+	 -------------------------------------- 
+	
+5) ...which I should have expected because I could've seen every message earlier that the courier had stored... but anyway I realized it would be a file permission thing, so limited the permissions to me (after first limiting it to no one with 000):
+	
+	$ /tmp
+	$ chmod 700 mmcrosk1.deaddrop 
+	
+	
+	Response when I returned:
+	
+	/ What are you trying to pull here? The \
+	\ package is the wrong size!            /
+	
+6) So I thought I needed to increase the size of the file by editing it
+
+	$ nano mmcrosk1.deadrop
+	
+	I wrote a nice little message for the courier
+	
+7) Then I went back to the courier
+
+	 ________________________________________ 
+	/ Well, everything looks good... I'm not \
+	| sure what 'Hello Co' means, but I'll   |
+	\ pass it on.                            /
+	 ---------------------------------------- 
+
+	And I think that does it!

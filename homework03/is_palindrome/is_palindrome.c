@@ -18,6 +18,7 @@ char *sanitize_string(char *s) {
 	}
 	reader++;
     }
+	*writer = 0;
     return sanitized;
 	free(sanitized); // free sanitized
 }
@@ -35,7 +36,7 @@ bool is_palindrome(const char *s) {
 }
 
 int main(int argc, char *argv[]) {
-    char buffer = malloc(BUFSIZ); // needed to allocate more memory
+    char *buffer = malloc(BUFSIZ); // needed to allocate more memory
     char *sanitized, *result;
 
     while (fgets(buffer, BUFSIZ, stdin)) {
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]) {
     	result    = is_palindrome(sanitized) ? "" : "not ";
 
     	printf("%s is %sa palindrome!\n", buffer, result);
+		//free(buffer);
     }
 	
     return EXIT_SUCCESS;
