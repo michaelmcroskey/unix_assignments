@@ -19,17 +19,6 @@ Options:
       skip=N      Skip N ibs-sized blocks at start of input
 ''')
 
-
-#
-#for arg in sys.argv:
-#	print arg
-
-# fs = os.open("etc/passwd", os.O_RDONLY)
-# os.read(fd, 10)
-# os.close(3)
-#
-# os.lseek(fd, 0, os.SEEK_SET)
-
 def open_fd(path, mode):
 	try:
 		return os.open(path, mode)
@@ -65,91 +54,70 @@ def lseek_fd(path, pos, how):
 		print >> sys.stderr, 'Could not lseek file {}: {}'.format(path, e)
 		sys.exit(1)
 
-#try:                                
-#	opts, args = getopt.getopt(sys.argv[1:],"h",["if=","of=","count=","bs=","seek=","skip="])
-#	
-#except getopt.GetoptError:
-#	usage()                         
-#	sys.exit(2)
-#
-#infile = 0
-#outfile = 1
-#count = sys.maxint
-#bs = 512
-#seek = None
-#skip = None
-#
+infile = 0
+outfile = 1
+count = sys.maxint
+bs = 512
+seek = None
+skip = None
+ofFlag = 0
+
 for opt in sys.argv[1:]:
 	opts = opt.split("=")
 	for i in range(len(opts)):
 		if opts[i] == 'if':
 			infile = opts[i+1]
-			source = open_fd(infile, os.O_RDONLY)
 			i += 1
 
 		elif opts[i] == 'of':
 			outfile = opts[i+1]
-			target = open_fd(outfile, os.O_CREAT|os.O_WRONLY)
+			ofFlag = 1
 			i += 1
 			        
 		elif opts[i] == 'count':
-			count = opts[i+1]
+			count = int(opts[i+1])
 			i += 1
 			
 		elif opts[i] == 'bs':
-			bs = opts[i+1]
+			bs = int(opts[i+1])
 			i += 1
 			
 		elif opts[i] == 'seek':
-			seek = opts[i+1]
-			lseek_fd(infile, skip*bs, os.SEEK_SET)
+			seek = int(opts[i+1])
 			i += 1
 			
 		elif opts[i] == 'skip':
-			skip = opts[i+1]
-			lseek_fd(outfile, skip*bs, os.SEEK_SET)
+			skip = int(opts[i+1])
 			i += 1
 			
 		else :
 			if not(i):
 				usage()
+if infile:
+	source = open_fd(infile, os.O_RDONLY)
+else:
+	source = 0
+	
+if ofFlag:
+	target = open_fd(outfile, os.O_CREAT|os.O_WRONLY)
+else:
+	target = 1	
 
-	           
-#for opt, arg in opts:
-#	if opt == '--if':
-#		infile = arg
-#		source = open_fd(infile, os.O_RDONLY)
-#		
-#	if opt == '--of':
-#		outfile = arg
-#		target = open_fd(outfile, os.O_CREAT|os.O_WRONLY)
-#		        
-#	if opt == '--count':
-#		count = arg
-#		
-#	if opt == '--bs':
-#		bs = arg
-#		
-#	if opt == '--seek':
-#		seek = arg
-#		lseek_fd(infile, skip*bs, os.SEEK_SET)
-#		
-#	if opt == '--skip':
-#		skip = arg
-#		lseek_fd(outfile, skip*bs, os.SEEK_SET)
-#	
-#	if opt == '-h':
-#		usage()
-#
-#data = read_fd(source, bs)
-#n = 0
-#while data:
-#	if n == count:
-#		break
-#	write_fd(target, data)
-#	data = read_fd(source, bs)
-#	n += 1
-#		
-#close_fd(source)
-#close_fd(target)
+if skip:
+	lseek_fd(source, skip*bs, os.SEEK_SET)
+if seek:
+	lseek_fd(target, seek*bs, os.SEEK_SET)
+
+data = read_fd(source, bs)
+n = 0
+
+while data:
+	if n == count:
+		break
+	write_fd(target, data)
+	data = read_fd(source, bs)
+	n += 1
+		
+close_fd(source)
+close_fd(target)
 		
