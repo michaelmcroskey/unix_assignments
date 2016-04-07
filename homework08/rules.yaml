@@ -1,0 +1,4 @@
+- pattern: '*'
+  action:  'echo {path}'
+- pattern: '*'
+  action:  'echo {name}'
